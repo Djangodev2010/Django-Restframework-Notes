@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Snippet
 from django.contrib.auth.models import User
 
-class SnippetSerializer(serializers.ModelSerializer):
+class SnippetSerializer(serializers.HyperlinkedModelSerializer):
     """
     Snippet serializer for serialization and deserialization of the instances
     of our snippet model
@@ -15,6 +15,7 @@ class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
         fields = [
+            'url',
             'id',
             'title',
             'code',
@@ -25,7 +26,7 @@ class SnippetSerializer(serializers.ModelSerializer):
             'owner'
         ]
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     """
     UserSerializer for serialization and deserialization of the instances
     of the User model
@@ -39,4 +40,4 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'snippets']
+        fields = ['url', 'id', 'username', 'snippets']
