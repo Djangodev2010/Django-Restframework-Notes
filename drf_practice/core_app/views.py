@@ -1,11 +1,31 @@
 from django.shortcuts import render
 from .models import Snippet
 from .serializers import SnippetSerializer, UserSerializer
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, renderers
 from django.contrib.auth.models import User
 from .permissions import IsOwnerOrReadOnly
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 # Create your views here.
+
+class SnippetHighlight(generics.GenericAPIView):
+    queryset = Snippet.objects.all()
+    renderer_classes = [renderers.StaticHTMLRenderer]
+    
+    def get(self, request, *args, **kwargs):
+        snippet = self.get_object()
+        return Response(snippet.highlighted)
+
+@api_view(['GET'])
+def api_root(request):
+    return Response(
+        {
+            'users': reverse('user-list', request=request),
+            'snippets': reverse('snippet-list', request=request)
+        }
+    )
 
 class SnippetList(generics.ListCreateAPIView):
     queryset = Snippet.objects.all()
